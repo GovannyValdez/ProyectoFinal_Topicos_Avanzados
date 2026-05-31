@@ -337,7 +337,7 @@ public class Login extends JFrame {
         progressBar.setBorder(BorderFactory.createEmptyBorder());
         progressBar.setPreferredSize(new Dimension(250, 25));
 
-        JLabel lblIcono = new JLabel("✈", SwingConstants.CENTER);
+        JLabel lblIcono = new JLabel("", SwingConstants.CENTER);
         lblIcono.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         lblIcono.setForeground(C_ACCENT);
 
