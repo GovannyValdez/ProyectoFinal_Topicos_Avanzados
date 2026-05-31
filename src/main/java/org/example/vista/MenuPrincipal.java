@@ -59,7 +59,8 @@ public class MenuPrincipal extends JFrame {
         mArchivo.add(menuOption("Exportar"));
         mArchivo.addSeparator();
         JMenuItem salir = menuOption("Salir");
-        salir.addActionListener(e -> System.exit(0));
+        // MODIFICADO: Cierra sesión en lugar de salir del programa
+        salir.addActionListener(e -> cerrarSesion());
         mArchivo.add(salir);
 
         JMenu mModulos = menuItem("Modulos");
@@ -130,6 +131,12 @@ public class MenuPrincipal extends JFrame {
         tb.add(toolBtn("Reportes", e -> {}));
 
         tb.add(Box.createHorizontalGlue());
+
+        // MODIFICADO: Botón de cerrar sesión en el toolbar
+        JButton btnCerrarSesion = toolBtn("Salir", e -> cerrarSesion());
+        btnCerrarSesion.setForeground(new Color(255, 200, 200, 190));
+        tb.add(btnCerrarSesion);
+        tb.add(toolSep());
 
         JPanel avatar = new JPanel(new GridBagLayout()) {
             @Override protected void paintComponent(Graphics g) {
@@ -241,7 +248,8 @@ public class MenuPrincipal extends JFrame {
         btnSalir.setMaximumSize(new Dimension(176, 36));
         btnSalir.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnSalir.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
-        btnSalir.addActionListener(e -> System.exit(0));
+        // MODIFICADO: Cierra sesión en lugar de salir del programa
+        btnSalir.addActionListener(e -> cerrarSesion());
         btnSalir.addMouseListener(new MouseAdapter() {
             @Override public void mouseEntered(MouseEvent e) { btnSalir.repaint(); }
             @Override public void mouseExited(MouseEvent e)  { btnSalir.repaint(); }
@@ -406,6 +414,22 @@ public class MenuPrincipal extends JFrame {
         card.add(d, gc);
 
         return card;
+    }
+
+    // NUEVO MÉTODO: Cierra sesión y vuelve al Login
+    private void cerrarSesion() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea cerrar sesión?",
+                "Cerrar Sesión",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Cierra la ventana actual (MenuPrincipal)
+            dispose();
+            // Abre una nueva instancia de Login
+            new Login();
+        }
     }
 
     private void abrirEmpleados() {
