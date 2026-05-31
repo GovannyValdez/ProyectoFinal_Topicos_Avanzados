@@ -20,7 +20,7 @@ public class Login extends JFrame {
     private static final Color C_BORDER   = new Color(0xC8D6E5);
     private static final Color C_WHITE    = Color.WHITE;
 
-    private static final String LOGO_PATH = "imagenes/logo.png";
+    private static final String LOGO_PATH = "org/example/imagenes/logo.png";
 
     private static final Font F_TITLE  = new Font("Segoe UI", Font.BOLD,  17);
     private static final Font F_SUB    = new Font("Segoe UI", Font.PLAIN, 11);
