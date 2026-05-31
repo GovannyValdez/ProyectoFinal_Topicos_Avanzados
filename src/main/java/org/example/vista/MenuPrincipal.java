@@ -416,7 +416,6 @@ public class MenuPrincipal extends JFrame {
         return card;
     }
 
-    // NUEVO MÉTODO: Cierra sesión y vuelve al Login
     private void cerrarSesion() {
         int confirm = JOptionPane.showConfirmDialog(this,
                 "¿Está seguro que desea cerrar sesión?",

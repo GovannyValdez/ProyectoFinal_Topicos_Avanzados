@@ -21,6 +21,7 @@ public class Login extends JFrame {
     private static final Color C_BORDER   = new Color(0xC8D6E5);
     private static final Color C_WHITE    = Color.WHITE;
 
+
     private static final String LOGO_PATH = "org/example/imagenes/logo.png";
 
     private static final Font F_TITLE  = new Font("Segoe UI", Font.BOLD,  17);
@@ -30,10 +31,17 @@ public class Login extends JFrame {
     private static final Font F_BUTTON = new Font("Segoe UI", Font.BOLD,  13);
     private static final Font F_SMALL  = new Font("Segoe UI", Font.PLAIN, 11);
 
+
     private JTextField     txtUsuario;
     private JPasswordField txtPassword;
     private JLabel         lblError;
     private ImageIcon      originalLogo;
+    private JButton btnEntrar;
+
+
+    private JDialog        dialogCarga;
+    private JProgressBar   progressBar;
+    private JLabel         lblEstadoCarga;
 
     public Login() {
         setTitle("Sistema Aeroportuario");
@@ -202,7 +210,7 @@ public class Login extends JFrame {
         g.fill = GridBagConstraints.HORIZONTAL;
         body.add(lblError, g);
 
-        JButton btnEntrar = buildButton("INICIAR SESION");
+        btnEntrar = buildButton("INICIAR SESION");
         g.gridy = 6; g.insets = new Insets(0, 0, 0, 0);
         g.fill = GridBagConstraints.HORIZONTAL;
         body.add(btnEntrar, g);
@@ -256,6 +264,7 @@ public class Login extends JFrame {
         });
     }
 
+
     private JButton buildButton(String label) {
         JButton btn = new JButton(label) {
             @Override protected void paintComponent(Graphics g) {
@@ -279,16 +288,120 @@ public class Login extends JFrame {
         return btn;
     }
 
+
+
+    //hilo
     private void iniciarSesion(ActionEvent e) {
-        String usuario  = txtUsuario.getText().trim();
+
+        String usuario = txtUsuario.getText().trim();
         String password = new String(txtPassword.getPassword());
+
         if (usuario.equals("admin") && password.equals("1234")) {
+
             lblError.setVisible(false);
-            JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario, "Acceso concedido", JOptionPane.INFORMATION_MESSAGE);
-            new MenuPrincipal();
-            dispose();
+
+            btnEntrar.setEnabled(false);
+
+            mostrarDialogoCarga();
+
+            new HiloCarga().start();
+
         } else {
+
             lblError.setVisible(true);
+
+        }
+    }
+
+
+    private void mostrarDialogoCarga() {
+        dialogCarga = new JDialog(this, "Cargando", false);        dialogCarga.setSize(300, 130);
+        dialogCarga.setLocationRelativeTo(this);
+        dialogCarga.setUndecorated(true);
+
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBackground(C_WHITE);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                new RoundedBorder(12, C_ACCENT, 2),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
+
+        lblEstadoCarga = new JLabel("Iniciando sesión...", SwingConstants.CENTER);
+        lblEstadoCarga.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblEstadoCarga.setForeground(C_ACCENT);
+
+        progressBar = new JProgressBar(0, 100);
+        progressBar.setStringPainted(true);
+        progressBar.setForeground(C_ACCENT);
+        progressBar.setBackground(new Color(0xE2E8F0));
+        progressBar.setBorder(BorderFactory.createEmptyBorder());
+        progressBar.setPreferredSize(new Dimension(250, 25));
+
+        JLabel lblIcono = new JLabel("✈", SwingConstants.CENTER);
+        lblIcono.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        lblIcono.setForeground(C_ACCENT);
+
+        panel.add(lblIcono, BorderLayout.NORTH);
+        panel.add(lblEstadoCarga, BorderLayout.CENTER);
+        panel.add(progressBar, BorderLayout.SOUTH);
+
+        dialogCarga.add(panel);
+        dialogCarga.setVisible(true);
+    }
+
+    class HiloCarga extends Thread {
+
+        private final String[] mensajes = {
+                "Verificando credenciales...",
+                "Conectando con la base de datos...",
+                "Cargando módulos del sistema...",
+                "Inicializando interfaz...",
+                "Abriendo menú principal..."
+        };
+
+        @Override
+        public void run() {
+
+            try {
+
+                for (int i = 0; i < mensajes.length; i++) {
+
+                    final int progreso = (i + 1) * 20;
+                    final String mensaje = mensajes[i];
+
+                    Thread.sleep(400);
+
+                    SwingUtilities.invokeLater(() -> {
+                        progressBar.setValue(progreso);
+                        lblEstadoCarga.setText(mensaje);
+                    });
+                }
+
+                Thread.sleep(300);
+
+                SwingUtilities.invokeLater(() -> {
+
+                    if (dialogCarga != null) {
+                        dialogCarga.dispose();
+                    }
+
+                    new MenuPrincipal();
+
+                    Login.this.dispose();
+
+                });
+
+            } catch (InterruptedException ex) {
+
+                ex.printStackTrace();
+
+                SwingUtilities.invokeLater(() -> {
+                    if (dialogCarga != null) {
+                        dialogCarga.dispose();
+                    }
+                    btnEntrar.setEnabled(true);
+                });
+            }
         }
     }
 
