@@ -167,7 +167,7 @@ public class Login extends JFrame {
         g.gridy = 1; g.insets = new Insets(0, 0, 14, 0);
         body.add(txtUsuario, g);
 
-        JLabel lblPass = new JLabel("CONTRASENA");
+        JLabel lblPass = new JLabel("CONTRASEÑA");
         lblPass.setFont(F_LABEL);
         lblPass.setForeground(C_TEXT);
         g.gridy = 2; g.insets = new Insets(0, 0, 5, 0);
@@ -178,7 +178,7 @@ public class Login extends JFrame {
         g.gridy = 3; g.insets = new Insets(0, 0, 5, 0);
         body.add(txtPassword, g);
 
-        JLabel lblForgot = new JLabel("Olvide mi contrasena");
+        JLabel lblForgot = new JLabel("Olvide mi contraseña");
         lblForgot.setFont(F_SMALL);
         lblForgot.setForeground(C_ACCENT);
         lblForgot.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -187,7 +187,7 @@ public class Login extends JFrame {
         g.fill = GridBagConstraints.NONE;
         body.add(lblForgot, g);
 
-        lblError = new JLabel("Usuario o contrasena incorrectos");
+        lblError = new JLabel("Usuario o contraseña incorrectos");
         lblError.setFont(F_SMALL);
         lblError.setForeground(C_ERROR);
         lblError.setOpaque(true);
@@ -217,7 +217,7 @@ public class Login extends JFrame {
         footer.setBackground(C_WHITE);
         footer.setBorder(new MatteBorder(1, 0, 0, 0, C_BORDER));
 
-        JLabel shield = new JLabel("🔒");
+        JLabel shield = new JLabel("+");
         shield.setFont(new Font("Segoe UI", Font.BOLD, 10));
         shield.setForeground(C_GREEN);
 
