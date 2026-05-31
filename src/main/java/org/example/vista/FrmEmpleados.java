@@ -14,7 +14,6 @@ public class FrmEmpleados extends JInternalFrame {
         setSize(800, 500);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
-        // Contenido temporal
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
 
