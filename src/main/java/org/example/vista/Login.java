@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import java.io.File;
 import java.net.URL;
 
 public class Login extends JFrame {
@@ -32,6 +33,7 @@ public class Login extends JFrame {
     private JTextField     txtUsuario;
     private JPasswordField txtPassword;
     private JLabel         lblError;
+    private ImageIcon      originalLogo;
 
     public Login() {
         setTitle("Sistema Aeroportuario");
@@ -39,6 +41,8 @@ public class Login extends JFrame {
         setResizable(false);
         setSize(400, 540);
         setLocationRelativeTo(null);
+
+        originalLogo = loadLogo();
 
         JPanel root = new JPanel(new GridBagLayout());
         root.setBackground(C_BG);
@@ -98,13 +102,21 @@ public class Login extends JFrame {
         logoCircle.setOpaque(false);
         logoCircle.setPreferredSize(new Dimension(64, 64));
 
-        ImageIcon icon = loadLogo(48, 48);
-        if (icon != null) {
-            logoCircle.add(new JLabel(icon));
+        if (originalLogo != null) {
+            JLabel logoLabel = new JLabel();
+            logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            logoLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+            int logoSize = (int)(64 * 0.75);
+            Image scaledImg = originalLogo.getImage().getScaledInstance(logoSize, logoSize, Image.SCALE_SMOOTH);
+            logoLabel.setIcon(new ImageIcon(scaledImg));
+
+            logoCircle.add(logoLabel);
         } else {
-            JLabel txt = new JLabel("LOGO");
-            txt.setFont(new Font("Segoe UI", Font.BOLD, 10));
-            txt.setForeground(new Color(255, 255, 255, 100));
+            JLabel txt = new JLabel("✈");
+            txt.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+            txt.setForeground(new Color(255, 255, 255, 140));
+            txt.setHorizontalAlignment(SwingConstants.CENTER);
             logoCircle.add(txt);
         }
 
@@ -205,7 +217,7 @@ public class Login extends JFrame {
         footer.setBackground(C_WHITE);
         footer.setBorder(new MatteBorder(1, 0, 0, 0, C_BORDER));
 
-        JLabel shield = new JLabel("[ ]");
+        JLabel shield = new JLabel("🔒");
         shield.setFont(new Font("Segoe UI", Font.BOLD, 10));
         shield.setForeground(C_GREEN);
 
@@ -280,15 +292,33 @@ public class Login extends JFrame {
         }
     }
 
-    private ImageIcon loadLogo(int w, int h) {
+    private ImageIcon loadLogo() {
         try {
-            URL url = getClass().getClassLoader().getResource(LOGO_PATH);
-            if (url == null) return null;
-            Image scaled = new ImageIcon(url).getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaled);
-        } catch (Exception ex) {
-            return null;
-        }
+            File logoFile = new File("src/main/java/org/example/imagenes/logo.png");
+            if (logoFile.exists()) {
+                System.out.println("Logo encontrado en: " + logoFile.getAbsolutePath());
+                return new ImageIcon(logoFile.getAbsolutePath());
+            }
+        } catch (Exception e) {}
+
+        try {
+            URL url = getClass().getClassLoader().getResource("org/example/imagenes/logo.png");
+            if (url != null) {
+                System.out.println("Logo encontrado en classpath: " + url);
+                return new ImageIcon(url);
+            }
+        } catch (Exception e) {}
+
+        try {
+            File logoFile = new File("logo.png");
+            if (logoFile.exists()) {
+                System.out.println("Logo encontrado en raíz: " + logoFile.getAbsolutePath());
+                return new ImageIcon(logoFile.getAbsolutePath());
+            }
+        } catch (Exception e) {}
+
+        System.err.println("No se encontró el logo en ninguna ubicación");
+        return null;
     }
 
     static class RoundedBorder extends AbstractBorder {
