@@ -132,7 +132,6 @@ public class MenuPrincipal extends JFrame {
 
         tb.add(Box.createHorizontalGlue());
 
-        // MODIFICADO: Botón de cerrar sesión en el toolbar
         JButton btnCerrarSesion = toolBtn("Salir", e -> cerrarSesion());
         btnCerrarSesion.setForeground(new Color(255, 200, 200, 190));
         tb.add(btnCerrarSesion);
@@ -248,7 +247,6 @@ public class MenuPrincipal extends JFrame {
         btnSalir.setMaximumSize(new Dimension(176, 36));
         btnSalir.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnSalir.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
-        // MODIFICADO: Cierra sesión en lugar de salir del programa
         btnSalir.addActionListener(e -> cerrarSesion());
         btnSalir.addMouseListener(new MouseAdapter() {
             @Override public void mouseEntered(MouseEvent e) { btnSalir.repaint(); }
