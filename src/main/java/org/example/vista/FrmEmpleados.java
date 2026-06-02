@@ -188,7 +188,7 @@ public class FrmEmpleados extends JInternalFrame {
     private void abrirFormularioAgregar() {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(topFrame, "Registrar Nuevo Empleado", true);
-        dialog.setSize(460, 480);
+        dialog.setSize(480, 480);
         dialog.setLocationRelativeTo(topFrame);
         dialog.setResizable(false);
 
@@ -228,13 +228,28 @@ public class FrmEmpleados extends JInternalFrame {
 
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         pnlBotones.setOpaque(false);
+
         JButton btnGuardar = crearBotonEstilizado("Guardar", C_GREEN);
+        JButton btnLimpiar = crearBotonEstilizado("Limpiar", new Color(0x7F8C8D)); // Color gris neutro
         JButton btnCancelar = crearBotonEstilizado("Cancelar", C_TEXT);
 
-        pnlBotones.add(btnCancelar); pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnCancelar);
+        pnlBotones.add(btnLimpiar);
+        pnlBotones.add(btnGuardar);
         pnlMain.add(pnlBotones, BorderLayout.SOUTH);
 
+        btnLimpiar.addActionListener(e -> {
+            txtSsn.setText("");
+            txtNombre.setText("");
+            txtDireccion.setText("");
+            txtTelefono.setText("");
+            txtSalario.setText("");
+            cmbUnion.setSelectedIndex(0);
+            txtSsn.requestFocus();
+        });
+
         btnCancelar.addActionListener(e -> dialog.dispose());
+
         btnGuardar.addActionListener(e -> {
             if (txtSsn.getText().trim().isEmpty() || txtNombre.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(dialog, "El SSN y el Nombre son estrictamente obligatorios.", "Campos Incompletos", JOptionPane.ERROR_MESSAGE);
@@ -242,7 +257,6 @@ public class FrmEmpleados extends JInternalFrame {
             }
             String telefono = txtTelefono.getText().trim().isEmpty() ? "N/A" : txtTelefono.getText().trim();
             double salario = txtSalario.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtSalario.getText().trim());
-
             String seleccionUnion = cmbUnion.getSelectedItem().toString().split(" ")[0];
 
             Empleado emp = new Empleado(txtSsn.getText().trim(), txtNombre.getText().trim(), txtDireccion.getText().trim(), telefono, salario, seleccionUnion);
@@ -259,7 +273,7 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setVisible(true);
     }
 
-    
+
     private void gestionarModificacion(int fila) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(topFrame, "Modificar Empleado", true);
