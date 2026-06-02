@@ -259,6 +259,7 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setVisible(true);
     }
 
+    
     private void gestionarModificacion(int fila) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(topFrame, "Modificar Empleado", true);
@@ -291,19 +292,28 @@ public class FrmEmpleados extends JInternalFrame {
         txtTelefono.setText(tablaEmpleados.getValueAt(fila, 3).toString());
         JTextField txtSalario = crearTextFieldFormulario();
         txtSalario.setText(tablaEmpleados.getValueAt(fila, 4).toString());
-        JTextField txtUnion = crearTextFieldFormulario();
-        txtUnion.setText(tablaEmpleados.getValueAt(fila, 5).toString());
+
+        JComboBox<String> cmbUnion = new JComboBox<>(OPCIONES_UNION);
+        cmbUnion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        cmbUnion.setBackground(C_WHITE);
+
+        String unionActual = tablaEmpleados.getValueAt(fila, 5).toString();
+        for (int i = 0; i < OPCIONES_UNION.length; i++) {
+            if (OPCIONES_UNION[i].startsWith(unionActual)) {
+                cmbUnion.setSelectedIndex(i);
+                break;
+            }
+        }
 
         configurarSoloNumerosEnteros(txtTelefono);
         configurarSoloNumerosDecimales(txtSalario);
-        configurarSoloNumerosEnteros(txtUnion);
 
         pnlCampos.add(crearLabelFormulario("SSN (No Editable):")); pnlCampos.add(lblSsnValor);
         pnlCampos.add(crearLabelFormulario("Nombre Completo (*):")); pnlCampos.add(txtNombre);
         pnlCampos.add(crearLabelFormulario("Dirección:")); pnlCampos.add(txtDireccion);
         pnlCampos.add(crearLabelFormulario("Teléfono:")); pnlCampos.add(txtTelefono);
         pnlCampos.add(crearLabelFormulario("Salario ($):")); pnlCampos.add(txtSalario);
-        pnlCampos.add(crearLabelFormulario("Número Unión:")); pnlCampos.add(txtUnion);
+        pnlCampos.add(crearLabelFormulario("Número Unión (UX):")); pnlCampos.add(cmbUnion);
 
         pnlMain.add(pnlCampos, BorderLayout.CENTER);
 
@@ -312,8 +322,7 @@ public class FrmEmpleados extends JInternalFrame {
         JButton btnActualizar = crearBotonEstilizado("Actualizar", C_ACCENT);
         JButton btnCancelar = crearBotonEstilizado("Cancelar", C_TEXT);
 
-        pnlBotones.add(btnCancelar);
-        pnlBotones.add(btnActualizar);
+        pnlBotones.add(btnCancelar); pnlBotones.add(btnActualizar);
         pnlMain.add(pnlBotones, BorderLayout.SOUTH);
 
         btnCancelar.addActionListener(e -> dialog.dispose());
@@ -323,8 +332,9 @@ public class FrmEmpleados extends JInternalFrame {
                 return;
             }
             double salario = txtSalario.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtSalario.getText().trim());
+            String seleccionUnion = cmbUnion.getSelectedItem().toString().split(" ")[0];
 
-            Empleado emp = new Empleado(ssn, txtNombre.getText().trim(), txtDireccion.getText().trim(), txtTelefono.getText().trim(), salario, txtUnion.getText().trim());
+            Empleado emp = new Empleado(ssn, txtNombre.getText().trim(), txtDireccion.getText().trim(), txtTelefono.getText().trim(), salario, seleccionUnion);
             if (empleadoDAO.actualizarEmpleado(emp)) {
                 JOptionPane.showMessageDialog(dialog, "Registro actualizado con éxito.");
                 dialog.dispose();
@@ -337,6 +347,7 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setContentPane(pnlMain);
         dialog.setVisible(true);
     }
+
 
     private void gestionarEliminacion(int fila) {
         String ssn = tablaEmpleados.getValueAt(fila, 0).toString();
