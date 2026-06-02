@@ -174,7 +174,7 @@ public class FrmEmpleados extends JInternalFrame {
         modeloTabla.setRowCount(0);
         List<Empleado> lista = empleadoDAO.obtenerTodos();
         for (Empleado emp : lista) {
-            if (emp.getNombre().toLowerCase().contains(query)) {
+            if (emp.getNombre().toLowerCase().contains(query) || emp.getSsn().toLowerCase().contains(query)) {
                 Object[] fila = {
                         emp.getSsn(), emp.getNombre(), emp.getDireccion(),
                         emp.getTelefono(), emp.getSalario(), emp.getNumeroUnion(),
