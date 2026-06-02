@@ -152,17 +152,31 @@ public class FrmEmpleados extends JInternalFrame {
         return tableCard;
     }
 
+    //hilo
     private void llenarTabla() {
-        modeloTabla.setRowCount(0);
-        List<Empleado> lista = empleadoDAO.obtenerTodos();
-        for (Empleado emp : lista) {
-            Object[] fila = {
-                    emp.getSsn(), emp.getNombre(), emp.getDireccion(),
-                    emp.getTelefono(), emp.getSalario(), emp.getNumeroUnion(),
-                    "Modificar", "Eliminar"
-            };
-            modeloTabla.addRow(fila);
-        }
+        Thread hiloConsulta = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Empleado> lista = empleadoDAO.obtenerTodos();
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        modeloTabla.setRowCount(0);
+                        for (Empleado emp : lista) {
+                            Object[] fila = {
+                                    emp.getSsn(), emp.getNombre(), emp.getDireccion(),
+                                    emp.getTelefono(), emp.getSalario(), emp.getNumeroUnion(),
+                                    "Modificar", "Eliminar"
+                            };
+                            modeloTabla.addRow(fila);
+                        }
+                    }
+                });
+            }
+        });
+
+        hiloConsulta.start();
     }
 
     private void buscarEmpleado() {
@@ -272,6 +286,7 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setContentPane(pnlMain);
         dialog.setVisible(true);
     }
+
 
     private void gestionarModificacion(int fila) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
