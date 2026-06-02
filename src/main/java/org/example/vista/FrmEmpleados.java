@@ -185,7 +185,6 @@ public class FrmEmpleados extends JInternalFrame {
         }
     }
 
-
     private void abrirFormularioAgregar() {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(topFrame, "Registrar Nuevo Empleado", true);
@@ -210,18 +209,20 @@ public class FrmEmpleados extends JInternalFrame {
         JTextField txtDireccion = crearTextFieldFormulario();
         JTextField txtTelefono = crearTextFieldFormulario();
         JTextField txtSalario = crearTextFieldFormulario();
-        JTextField txtUnion = crearTextFieldFormulario();
+
+        JComboBox<String> cmbUnion = new JComboBox<>(OPCIONES_UNION);
+        cmbUnion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        cmbUnion.setBackground(C_WHITE);
 
         configurarSoloNumerosEnteros(txtTelefono);
         configurarSoloNumerosDecimales(txtSalario);
-        configurarSoloNumerosEnteros(txtUnion);
 
         pnlCampos.add(crearLabelFormulario("SSN / Cédula (*):")); pnlCampos.add(txtSsn);
         pnlCampos.add(crearLabelFormulario("Nombre Completo (*):")); pnlCampos.add(txtNombre);
         pnlCampos.add(crearLabelFormulario("Dirección:")); pnlCampos.add(txtDireccion);
         pnlCampos.add(crearLabelFormulario("Teléfono:")); pnlCampos.add(txtTelefono);
         pnlCampos.add(crearLabelFormulario("Salario ($):")); pnlCampos.add(txtSalario);
-        pnlCampos.add(crearLabelFormulario("Número Unión:")); pnlCampos.add(txtUnion);
+        pnlCampos.add(crearLabelFormulario("Número Unión (UX):")); pnlCampos.add(cmbUnion);
 
         pnlMain.add(pnlCampos, BorderLayout.CENTER);
 
@@ -230,8 +231,7 @@ public class FrmEmpleados extends JInternalFrame {
         JButton btnGuardar = crearBotonEstilizado("Guardar", C_GREEN);
         JButton btnCancelar = crearBotonEstilizado("Cancelar", C_TEXT);
 
-        pnlBotones.add(btnCancelar);
-        pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnCancelar); pnlBotones.add(btnGuardar);
         pnlMain.add(pnlBotones, BorderLayout.SOUTH);
 
         btnCancelar.addActionListener(e -> dialog.dispose());
@@ -242,9 +242,10 @@ public class FrmEmpleados extends JInternalFrame {
             }
             String telefono = txtTelefono.getText().trim().isEmpty() ? "N/A" : txtTelefono.getText().trim();
             double salario = txtSalario.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtSalario.getText().trim());
-            String numUnion = txtUnion.getText().trim().isEmpty() ? "0" : txtUnion.getText().trim();
 
-            Empleado emp = new Empleado(txtSsn.getText().trim(), txtNombre.getText().trim(), txtDireccion.getText().trim(), telefono, salario, numUnion);
+            String seleccionUnion = cmbUnion.getSelectedItem().toString().split(" ")[0];
+
+            Empleado emp = new Empleado(txtSsn.getText().trim(), txtNombre.getText().trim(), txtDireccion.getText().trim(), telefono, salario, seleccionUnion);
             if (empleadoDAO.agregarEmpleado(emp)) {
                 JOptionPane.showMessageDialog(dialog, "Empleado guardado de forma exitosa.");
                 dialog.dispose();
@@ -257,7 +258,6 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setContentPane(pnlMain);
         dialog.setVisible(true);
     }
-
 
     private void gestionarModificacion(int fila) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
