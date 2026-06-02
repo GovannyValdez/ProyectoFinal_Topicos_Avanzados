@@ -66,34 +66,17 @@ public class ConexionBD {
 
     }
 
-    public boolean ejecutarPreparedStatement(
-            String sql,
-            Object... parametros
-    ) {
-
-        try {
-
-            PreparedStatement pstm =
-                    conexion.prepareStatement(sql);
-
+    public boolean ejecutarPreparedStatement(String sql, Object... parametros) {
+        try (PreparedStatement pstm = conexion.prepareStatement(sql)) {
             for (int i = 0; i < parametros.length; i++) {
-
                 pstm.setObject(i + 1, parametros[i]);
-
             }
-
             return pstm.executeUpdate() > 0;
-
         } catch (SQLException e) {
-
             System.err.println("Error al ejecutar PreparedStatement");
-
             e.printStackTrace();
-
             return false;
-
         }
-
     }
 
     public ResultSet ejecutarQueryPrepared(
