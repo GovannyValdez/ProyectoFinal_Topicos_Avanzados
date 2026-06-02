@@ -273,11 +273,10 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setVisible(true);
     }
 
-
     private void gestionarModificacion(int fila) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(topFrame, "Modificar Empleado", true);
-        dialog.setSize(460, 480);
+        dialog.setSize(480, 480);
         dialog.setLocationRelativeTo(topFrame);
         dialog.setResizable(false);
 
@@ -293,31 +292,42 @@ public class FrmEmpleados extends JInternalFrame {
         JPanel pnlCampos = new JPanel(new GridLayout(6, 2, 10, 15));
         pnlCampos.setOpaque(false);
 
-        String ssn = tablaEmpleados.getValueAt(fila, 0).toString();
+        final String ssn = tablaEmpleados.getValueAt(fila, 0).toString();
+        final String nombreOriginal = tablaEmpleados.getValueAt(fila, 1).toString();
+        final String direccionOriginal = tablaEmpleados.getValueAt(fila, 2).toString();
+        final String telefonoOriginal = tablaEmpleados.getValueAt(fila, 3).toString();
+        final String salarioOriginal = tablaEmpleados.getValueAt(fila, 4).toString();
+        final String unionOriginal = tablaEmpleados.getValueAt(fila, 5).toString();
+
         JLabel lblSsnValor = new JLabel(ssn);
         lblSsnValor.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblSsnValor.setForeground(C_NAVY);
 
         JTextField txtNombre = crearTextFieldFormulario();
-        txtNombre.setText(tablaEmpleados.getValueAt(fila, 1).toString());
+        txtNombre.setText(nombreOriginal);
+
         JTextField txtDireccion = crearTextFieldFormulario();
-        txtDireccion.setText(tablaEmpleados.getValueAt(fila, 2).toString());
+        txtDireccion.setText(direccionOriginal);
+
         JTextField txtTelefono = crearTextFieldFormulario();
-        txtTelefono.setText(tablaEmpleados.getValueAt(fila, 3).toString());
+        txtTelefono.setText(telefonoOriginal);
+
         JTextField txtSalario = crearTextFieldFormulario();
-        txtSalario.setText(tablaEmpleados.getValueAt(fila, 4).toString());
+        txtSalario.setText(salarioOriginal);
 
         JComboBox<String> cmbUnion = new JComboBox<>(OPCIONES_UNION);
         cmbUnion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         cmbUnion.setBackground(C_WHITE);
 
-        String unionActual = tablaEmpleados.getValueAt(fila, 5).toString();
-        for (int i = 0; i < OPCIONES_UNION.length; i++) {
-            if (OPCIONES_UNION[i].startsWith(unionActual)) {
-                cmbUnion.setSelectedIndex(i);
-                break;
+        Runnable seleccionarUnionActual = () -> {
+            for (int i = 0; i < OPCIONES_UNION.length; i++) {
+                if (OPCIONES_UNION[i].startsWith(unionOriginal)) {
+                    cmbUnion.setSelectedIndex(i);
+                    break;
+                }
             }
-        }
+        };
+        seleccionarUnionActual.run();
 
         configurarSoloNumerosEnteros(txtTelefono);
         configurarSoloNumerosDecimales(txtSalario);
@@ -333,13 +343,27 @@ public class FrmEmpleados extends JInternalFrame {
 
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         pnlBotones.setOpaque(false);
+
         JButton btnActualizar = crearBotonEstilizado("Actualizar", C_ACCENT);
+        JButton btnRestablecer = crearBotonEstilizado("Restablecer", new Color(0x7F8C8D)); // Gris institucional
         JButton btnCancelar = crearBotonEstilizado("Cancelar", C_TEXT);
 
-        pnlBotones.add(btnCancelar); pnlBotones.add(btnActualizar);
+        pnlBotones.add(btnCancelar);
+        pnlBotones.add(btnRestablecer);
+        pnlBotones.add(btnActualizar);
         pnlMain.add(pnlBotones, BorderLayout.SOUTH);
 
+        btnRestablecer.addActionListener(e -> {
+            txtNombre.setText(nombreOriginal);
+            txtDireccion.setText(direccionOriginal);
+            txtTelefono.setText(telefonoOriginal);
+            txtSalario.setText(salarioOriginal);
+            seleccionarUnionActual.run();
+            txtNombre.requestFocus();
+        });
+
         btnCancelar.addActionListener(e -> dialog.dispose());
+
         btnActualizar.addActionListener(e -> {
             if (txtNombre.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(dialog, "El nombre del empleado no puede quedar vacío.", "Validación", JOptionPane.ERROR_MESSAGE);
@@ -361,7 +385,6 @@ public class FrmEmpleados extends JInternalFrame {
         dialog.setContentPane(pnlMain);
         dialog.setVisible(true);
     }
-
 
     private void gestionarEliminacion(int fila) {
         String ssn = tablaEmpleados.getValueAt(fila, 0).toString();
