@@ -54,6 +54,8 @@ public class FrmEmpleados extends JInternalFrame {
         llenarTabla();
     }
 
+
+
     private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
         topPanel.setOpaque(false);
@@ -61,23 +63,28 @@ public class FrmEmpleados extends JInternalFrame {
         JPanel panelBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         panelBusqueda.setOpaque(false);
 
-        JLabel lblBuscar = new JLabel("Buscar por Nombre:");
+        JLabel lblBuscar = new JLabel("Búsqueda Inteligente (Nombre o SSN):");
         lblBuscar.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblBuscar.setForeground(C_TEXT);
 
-        txtBuscar = new JTextField(20);
+        txtBuscar = new JTextField(25);
         txtBuscar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         txtBuscar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(0xC8D6E5), 1),
                 BorderFactory.createEmptyBorder(4, 6, 4, 6)
         ));
 
-        JButton btnBuscar = crearBotonEstilizado("Buscar", C_NAVY);
+        txtBuscar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                buscarEmpleado();
+            }
+        });
+
         JButton btnRestablecer = crearBotonEstilizado("Reestablecer", C_TEXT);
 
         panelBusqueda.add(lblBuscar);
         panelBusqueda.add(txtBuscar);
-        panelBusqueda.add(btnBuscar);
         panelBusqueda.add(btnRestablecer);
 
         JButton btnNuevo = crearBotonEstilizado("+ Agregar Empleado", C_GREEN);
@@ -85,7 +92,6 @@ public class FrmEmpleados extends JInternalFrame {
         topPanel.add(panelBusqueda, BorderLayout.WEST);
         topPanel.add(btnNuevo, BorderLayout.EAST);
 
-        btnBuscar.addActionListener(e -> buscarEmpleado());
         btnRestablecer.addActionListener(e -> {
             txtBuscar.setText("");
             llenarTabla();
@@ -94,6 +100,8 @@ public class FrmEmpleados extends JInternalFrame {
 
         return topPanel;
     }
+
+
 
     private JPanel buildTablePanel() {
         JPanel tableCard = new JPanel(new BorderLayout()) {
