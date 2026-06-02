@@ -25,6 +25,8 @@ public class FrmEmpleados extends JInternalFrame {
     private static final Color C_GREEN       = new Color(0x2A9D8F);
     private static final Color C_MUTED       = new Color(0xA0AEC0);
 
+
+    private final String[] OPCIONES_UNION = {"0 - Ninguno", "101 - Sindicato General", "102 - Sindicato Técnico", "103 - Directiva"};
     private EmpleadoDAO empleadoDAO;
     private JTable tablaEmpleados;
     private DefaultTableModel modeloTabla;
