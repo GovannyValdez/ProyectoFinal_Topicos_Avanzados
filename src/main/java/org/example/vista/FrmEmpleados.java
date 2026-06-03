@@ -115,6 +115,7 @@ public class FrmEmpleados extends JInternalFrame {
                 g2.dispose();
             }
         };
+
         tableCard.setOpaque(false);
         tableCard.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
@@ -236,11 +237,11 @@ public class FrmEmpleados extends JInternalFrame {
         JPanel pnlCampos = new JPanel(new GridLayout(6, 2, 10, 15));
         pnlCampos.setOpaque(false);
 
-        JTextField txtSsn = crearTextFieldFormulario();
-        JTextField txtNombre = crearTextFieldFormulario();
-        JTextField txtDireccion = crearTextFieldFormulario();
-        JTextField txtTelefono = crearTextFieldFormulario();
-        JTextField txtSalario = crearTextFieldFormulario();
+        JTextField txtSsn = crearTextFieldFormulario(false);
+        JTextField txtNombre = crearTextFieldFormulario(true);
+        JTextField txtDireccion = crearTextFieldFormulario(false);
+        JTextField txtTelefono = crearTextFieldFormulario(false);
+        JTextField txtSalario = crearTextFieldFormulario(false);
 
         JComboBox<String> cmbUnion = new JComboBox<>(OPCIONES_UNION);
         cmbUnion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -336,16 +337,16 @@ public class FrmEmpleados extends JInternalFrame {
         lblSsnValor.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblSsnValor.setForeground(C_NAVY);
 
-        JTextField txtNombre = crearTextFieldFormulario();
+        JTextField txtNombre = crearTextFieldFormulario(true);
         txtNombre.setText(nombreOriginal);
 
-        JTextField txtDireccion = crearTextFieldFormulario();
+        JTextField txtDireccion = crearTextFieldFormulario(false);
         txtDireccion.setText(direccionOriginal);
 
-        JTextField txtTelefono = crearTextFieldFormulario();
+        JTextField txtTelefono = crearTextFieldFormulario(false);
         txtTelefono.setText(telefonoOriginal);
 
-        JTextField txtSalario = crearTextFieldFormulario();
+        JTextField txtSalario = crearTextFieldFormulario(false);
         txtSalario.setText(salarioOriginal);
 
         JComboBox<String> cmbUnion = new JComboBox<>(OPCIONES_UNION);
@@ -441,8 +442,7 @@ public class FrmEmpleados extends JInternalFrame {
         label.setForeground(C_TEXT);
         return label;
     }
-
-    private JTextField crearTextFieldFormulario() {
+    private JTextField crearTextFieldFormulario(boolean soloLetras) {
         JTextField tf = new JTextField();
         tf.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tf.setForeground(C_TEXT);
@@ -450,8 +450,23 @@ public class FrmEmpleados extends JInternalFrame {
                 BorderFactory.createLineBorder(new Color(0xC8D6E5), 1),
                 BorderFactory.createEmptyBorder(4, 6, 4, 6)
         ));
+
+        if (soloLetras) {
+            tf.addKeyListener(new java.awt.event.KeyAdapter() {
+                @Override
+                public void keyTyped(java.awt.event.KeyEvent e) {
+                    char c = e.getKeyChar();
+                    if (!Character.isLetter(c) && c != ' ' && c != '\b') {
+                        e.consume();
+                    }
+                }
+            });
+        }
+
         return tf;
     }
+
+
 
     private void configurarSoloNumerosEnteros(JTextField tf) {
         tf.addKeyListener(new KeyAdapter() {
