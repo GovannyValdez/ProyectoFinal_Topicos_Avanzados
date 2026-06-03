@@ -32,7 +32,28 @@ public class MenuPrincipal extends JFrame {
         setSize(1100, 680);
         setLocationRelativeTo(null);
 
-       
+        desktop = new JDesktopPane() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    java.io.File archivoImg = new java.io.File("src/main/resources/org/example/imagenes/fono_aeropuerto.jpg");
+
+                    if (!archivoImg.exists()) {
+                        archivoImg = new java.io.File("src/main/java/org/example/imagenes/fono_aeropuerto.jpg");
+                    }
+
+                    if (archivoImg.exists()) {
+                        Image img = new ImageIcon(archivoImg.getAbsolutePath()).getImage();
+                        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                    } else {
+                        System.err.println("Archivo no encontrado en las rutas físicas.");
+                    }
+                } catch (Exception e) {
+                    System.err.println("No se pudo cargar la imagen de fondo del aeropuerto");
+                }
+            }
+        };
 
         setJMenuBar(buildMenuBar());
 
@@ -320,54 +341,13 @@ public class MenuPrincipal extends JFrame {
         });
         return btn;
     }
-
     private JDesktopPane buildDesktop() {
-        desktop = new JDesktopPane();
         desktop.setBackground(C_BG);
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 
-        JPanel welcome = new JPanel(new GridBagLayout());
-        welcome.setOpaque(false);
-        welcome.setBounds(0, 0, 900, 600);
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0; g.anchor = GridBagConstraints.CENTER;
-
-        JLabel lblW = new JLabel("Bienvenido al sistema");
-        lblW.setFont(F_WELCOME);
-        lblW.setForeground(C_TEXT);
-        g.gridy = 0; g.insets = new Insets(0,0,6,0);
-        welcome.add(lblW, g);
-
-        JLabel lblS = new JLabel("Seleccione una opcion del menu lateral para continuar");
-        lblS.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lblS.setForeground(C_MUTED);
-        g.gridy = 1; g.insets = new Insets(0,0,36,0);
-        welcome.add(lblS, g);
-
-        JPanel cards = new JPanel(new GridLayout(2, 3, 14, 14));
-        cards.setOpaque(false);
-        cards.setPreferredSize(new Dimension(560, 220));
-
-        String[][] mods = {
-                {"Empleados","Personal activo"},
-                {"Vuelos","Vuelos programados"},
-                {"Pasajeros","Pasajeros registrados"},
-                {"Equipaje","Bultos en sistema"},
-                {"Reportes","Informes disponibles"},
-                {"Configuracion","Ajustes del sistema"}
-        };
-        for (String[] m : mods) cards.add(buildCard(m[0], m[1]));
-
-        g.gridy = 2; g.insets = new Insets(0,0,0,0);
-        welcome.add(cards, g);
-
-        desktop.add(welcome);
-        desktop.setLayer(welcome, JLayeredPane.DEFAULT_LAYER);
 
         return desktop;
     }
-
     private JPanel buildCard(String titulo, String desc) {
         JPanel card = new JPanel(new GridBagLayout()) {
             @Override protected void paintComponent(Graphics g) {
