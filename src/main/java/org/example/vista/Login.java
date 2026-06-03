@@ -290,7 +290,6 @@ public class Login extends JFrame {
 
 
 
-    //hilo
     private void iniciarSesion(ActionEvent e) {
 
         String usuario = txtUsuario.getText().trim();
@@ -349,6 +348,10 @@ public class Login extends JFrame {
         dialogCarga.setVisible(true);
     }
 
+
+
+
+    //hilo
     class HiloCarga extends Thread {
 
         private final String[] mensajes = {
@@ -405,6 +408,9 @@ public class Login extends JFrame {
         }
     }
 
+
+
+
     private ImageIcon loadLogo() {
         try {
             File logoFile = new File("src/main/java/org/example/imagenes/logo.png");
@@ -437,6 +443,8 @@ public class Login extends JFrame {
     static class RoundedBorder extends AbstractBorder {
         private final int arc, thickness;
         private final Color color;
+
+
         RoundedBorder(int arc, Color color, int thickness) {
             this.arc = arc; this.color = color; this.thickness = thickness;
         }

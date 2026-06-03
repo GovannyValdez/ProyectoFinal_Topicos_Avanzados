@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 
+
 public class MenuPrincipal extends JFrame {
 
     private static final Color C_BG          = new Color(0xF0F4F8);

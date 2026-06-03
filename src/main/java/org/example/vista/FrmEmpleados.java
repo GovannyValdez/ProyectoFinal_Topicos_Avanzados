@@ -152,6 +152,7 @@ public class FrmEmpleados extends JInternalFrame {
         return tableCard;
     }
 
+
     //hilo
     private void llenarTabla() {
         Thread hiloConsulta = new Thread(new Runnable() {
@@ -179,6 +180,7 @@ public class FrmEmpleados extends JInternalFrame {
         hiloConsulta.start();
     }
 
+    //hilo
     private void buscarEmpleado() {
         String query = txtBuscar.getText().trim().toLowerCase();
         if (query.isEmpty()) {
@@ -212,6 +214,8 @@ public class FrmEmpleados extends JInternalFrame {
 
         hiloBusqueda.start();
     }
+
+
 
     private void abrirFormularioAgregar() {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
