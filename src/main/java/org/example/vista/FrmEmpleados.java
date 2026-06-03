@@ -185,18 +185,32 @@ public class FrmEmpleados extends JInternalFrame {
             llenarTabla();
             return;
         }
-        modeloTabla.setRowCount(0);
-        List<Empleado> lista = empleadoDAO.obtenerTodos();
-        for (Empleado emp : lista) {
-            if (emp.getNombre().toLowerCase().contains(query) || emp.getSsn().toLowerCase().contains(query)) {
-                Object[] fila = {
-                        emp.getSsn(), emp.getNombre(), emp.getDireccion(),
-                        emp.getTelefono(), emp.getSalario(), emp.getNumeroUnion(),
-                        "Modificar", "Eliminar"
-                };
-                modeloTabla.addRow(fila);
+
+        Thread hiloBusqueda = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Empleado> lista = empleadoDAO.obtenerTodos();
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        modeloTabla.setRowCount(0);
+                        for (Empleado emp : lista) {
+                            if (emp.getNombre().toLowerCase().contains(query) || emp.getSsn().toLowerCase().contains(query)) {
+                                Object[] fila = {
+                                        emp.getSsn(), emp.getNombre(), emp.getDireccion(),
+                                        emp.getTelefono(), emp.getSalario(), emp.getNumeroUnion(),
+                                        "Modificar", "Eliminar"
+                                };
+                                modeloTabla.addRow(fila);
+                            }
+                        }
+                    }
+                });
             }
-        }
+        });
+
+        hiloBusqueda.start();
     }
 
     private void abrirFormularioAgregar() {
