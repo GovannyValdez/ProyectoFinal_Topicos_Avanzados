@@ -32,6 +32,8 @@ public class MenuPrincipal extends JFrame {
         setSize(1100, 680);
         setLocationRelativeTo(null);
 
+       
+
         setJMenuBar(buildMenuBar());
 
         JPanel root = new JPanel(new BorderLayout());
@@ -59,7 +61,6 @@ public class MenuPrincipal extends JFrame {
         mArchivo.add(menuOption("Exportar"));
         mArchivo.addSeparator();
         JMenuItem salir = menuOption("Salir");
-        // MODIFICADO: Cierra sesión en lugar de salir del programa
         salir.addActionListener(e -> cerrarSesion());
         mArchivo.add(salir);
 
